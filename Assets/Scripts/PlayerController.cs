@@ -11,20 +11,20 @@ public class PlayerController : MonoBehaviour
     public float walkSpeed = 4f;
     public float sprintSpeed = 8f;
 
-    
-
     private float horizontal;
     private float vertical;
     private float moveLimiter = 0.7f;
 
-    private Rigidbody2D rb;
+    public Rigidbody2D rb;
 
     private Vector2 movementDirection;
+
+    private Transform playerLocation;
 
     // Start is called before the first frame update
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
+        playerLocation = this.transform;
 
         isSprinting = false;
         movementSpeed = walkSpeed;
@@ -50,6 +50,11 @@ public class PlayerController : MonoBehaviour
 
             isSprinting = false;
         }
+
+        Vector2 direction = Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerLocation.position;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        Quaternion rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
+        playerLocation.rotation = rotation;
     }
     private void FixedUpdate()
     {
