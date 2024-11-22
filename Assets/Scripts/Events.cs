@@ -22,8 +22,8 @@ public class Events : MonoBehaviour
     public event Action onPlayerMoveLeft;
     public event Action onPlayerMoveRight;
 
-    public event Action onPlayerInDarkness;
-    public event Action onPlayerInSunlight;
+    public event Action onPlayerMeleeAttack;
+    public event Action onPlayerRangedAttack;
 
     public void PlayerIdle()
     {
@@ -60,18 +60,18 @@ public class Events : MonoBehaviour
             onPlayerMoveRight();
         }
     }
-    public void PlayerInDarkness()
+    public void PlayerMeleeAttack()
     {
-        if (onPlayerInDarkness != null)
+        if (onPlayerMeleeAttack != null)
         {
-            onPlayerInDarkness();
+            onPlayerMeleeAttack();
         }
     }
-    public void PlayerInSunlight()
+    public void PlayerRangedAttack()
     {
-        if (onPlayerInSunlight != null)
+        if (onPlayerRangedAttack != null)
         {
-            onPlayerInSunlight();
+            onPlayerRangedAttack();
         }
     }
 }
