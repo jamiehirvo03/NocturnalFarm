@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class EnemyController : MonoBehaviour
 {
@@ -13,9 +14,9 @@ public class EnemyController : MonoBehaviour
     public float thisEnemyHealth;
     public float thisEnemySpeed;
 
+    public Slider EnemyHealthBar;
+
     [SerializeField] private bool inPlayerMeleeRange;
-
-
 
     // Start is called before the first frame update
     void Start()
@@ -36,7 +37,10 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
+        if (thisEnemyHealth <= 0)
+        {
+            Destroy(this.gameObject);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -44,7 +48,8 @@ public class EnemyController : MonoBehaviour
         if (other.gameObject.tag == "MeleeDetection")
         {
             inPlayerMeleeRange = true;
-            Events.current.onPlayerMeleeAttack += OnPlayerMeleeAttack;
+            Events.current.onPlayerLightAttack += OnPlayerLightAttack;
+            Events.current.onPlayerHeavyAttack += OnPlayerHeavyAttack;
         }
     }
     private void OnTriggerExit2D(Collider2D other)
@@ -52,12 +57,38 @@ public class EnemyController : MonoBehaviour
         if (other.gameObject.tag == "MeleeDetection")
         {
             inPlayerMeleeRange = false;
-            Events.current.onPlayerMeleeAttack -= OnPlayerMeleeAttack;
+            Events.current.onPlayerLightAttack -= OnPlayerLightAttack;
+            Events.current.onPlayerHeavyAttack -= OnPlayerHeavyAttack;
         }
     }
 
-    private void OnPlayerMeleeAttack()
+    private void OnPlayerLightAttack()
     {
+        if (inPlayerMeleeRange)
+        {
+            thisEnemyHealth -= 50;
 
+            UpdateEnemyHealth();
+        }
     }
+
+    private void OnPlayerHeavyAttack()
+    {
+        if (inPlayerMeleeRange)
+        {
+            thisEnemyHealth -= 100;
+            
+            UpdateEnemyHealth();
+        }
+    }
+
+    private void UpdateEnemyHealth()
+    {
+        float healthPercentage;
+
+        healthPercentage = (thisEnemyHealth / (EnemyHealth[listIndex])) * 100f;
+
+        EnemyHealthBar.value = healthPercentage;
+    }
+
 }

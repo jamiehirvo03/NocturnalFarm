@@ -2,24 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float movementSpeed;
     [SerializeField] private bool isSprinting;
+    
+    private float horizontal;
+    private float vertical;
+    private float moveLimiter = 0.7f;
+    public Rigidbody2D rb;
+    private Vector2 movementDirection;
+    private Transform playerLocation;
 
     public float walkSpeed = 4f;
     public float sprintSpeed = 8f;
 
-    private float horizontal;
-    private float vertical;
-    private float moveLimiter = 0.7f;
+    [SerializeField] private float playerHealth;
+    [SerializeField] private float maxHealth = 150f;
+    public Slider healthBar;
 
-    public Rigidbody2D rb;
+    [SerializeField] private float playerStamina;
+    [SerializeField] private float maxStamina = 100;
+    public Slider staminaBar;
 
-    private Vector2 movementDirection;
-
-    private Transform playerLocation;
+    public  float staminaDecreasePerFrame = 1;
+    public float staminaIncreasePerFrame = 5;
+    private float staminaRegenTimer = 0;
+    public float staminaTimeToRegen = 3;
 
     // Start is called before the first frame update
     void Start()
@@ -28,6 +39,15 @@ public class PlayerController : MonoBehaviour
 
         isSprinting = false;
         movementSpeed = walkSpeed;
+
+        playerHealth = maxHealth;
+        playerStamina = maxStamina;
+
+        healthBar.maxValue = maxHealth;
+        UpdateHealthBar();
+
+        staminaBar.maxValue = maxStamina;
+        UpdateStaminaBar();
     }
 
     // Update is called once per frame
@@ -50,6 +70,10 @@ public class PlayerController : MonoBehaviour
 
             isSprinting = false;
         }
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            Events.current.PlayerLightAttack();
+        }
 
         Vector2 direction = Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerLocation.position;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
@@ -63,6 +87,66 @@ public class PlayerController : MonoBehaviour
             movementDirection *= moveLimiter;
         }
 
+        if (horizontal != 0 | vertical != 0)
+        {
+            if (isSprinting)
+            {
+                playerStamina = Mathf.Clamp(playerStamina - (staminaDecreasePerFrame * Time.deltaTime), 0, maxStamina);
+                UpdateStaminaBar();
+
+                staminaRegenTimer = 0;
+            }
+        }
+
+        if (horizontal == 0 && vertical == 0)
+        {
+            if (playerStamina < maxStamina)
+            {
+                if (staminaRegenTimer >= staminaTimeToRegen)
+                {
+                    playerStamina = Mathf.Clamp(playerStamina + (staminaIncreasePerFrame * Time.deltaTime), 0.0f, maxStamina);
+                    UpdateStaminaBar();
+                }
+                else
+                {
+                    staminaRegenTimer += Time.deltaTime;
+                }
+            }
+        }
         rb.velocity = movementDirection * movementSpeed;
+    }
+
+    private void UpdateHealthBar()
+    {
+        healthBar.value = playerHealth;
+    }
+
+    private void UpdateStaminaBar()
+    {
+        staminaBar.value = playerStamina;
+    }
+
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.tag == "EnemyScout")
+        {
+            playerHealth -= 20;
+            UpdateHealthBar();
+        }
+        if (other.gameObject.tag == "EnemyRanged")
+        {
+            playerHealth -= 10;
+            UpdateHealthBar();
+        }
+        if (other.gameObject.tag == "EnemyGrunt")
+        {
+            playerHealth -= 50;
+            UpdateHealthBar();
+        }
+        if (other.gameObject.tag == "EnemyTank")
+        {
+            playerHealth -= 100;
+            UpdateHealthBar();
+        }
     }
 }

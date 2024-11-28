@@ -22,7 +22,8 @@ public class Events : MonoBehaviour
     public event Action onPlayerMoveLeft;
     public event Action onPlayerMoveRight;
 
-    public event Action onPlayerMeleeAttack;
+    public event Action onPlayerLightAttack;
+    public event Action onPlayerHeavyAttack;
     public event Action onPlayerRangedAttack;
 
     public void PlayerIdle()
@@ -60,11 +61,18 @@ public class Events : MonoBehaviour
             onPlayerMoveRight();
         }
     }
-    public void PlayerMeleeAttack()
+    public void PlayerLightAttack()
     {
-        if (onPlayerMeleeAttack != null)
+        if (onPlayerLightAttack != null)
         {
-            onPlayerMeleeAttack();
+            onPlayerLightAttack();
+        }
+    }
+    public void PlayerHeavyAttack()
+    {
+        if (onPlayerHeavyAttack != null)
+        {
+            onPlayerHeavyAttack();
         }
     }
     public void PlayerRangedAttack()
