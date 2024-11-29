@@ -46,6 +46,7 @@ public class EnemyController : MonoBehaviour
         Events.current.onShowEnemyUI += ShowEnemyUI;
         Events.current.onHideEnemyUI += HideEnemyUI;
 
+        EnemyUI.SetActive(false);
 
         for (int i = 0; i < EnemyType.Count; i++)
         {
@@ -67,7 +68,7 @@ public class EnemyController : MonoBehaviour
     {
         if (thisEnemyHealth <= 0)
         {
-            Destroy(this.gameObject);
+            EnemyDeath();
         }
     }
 
@@ -155,9 +156,17 @@ public class EnemyController : MonoBehaviour
             UpdateEnemyHealth();
         }
     }
+    private void EnemyDeath()
+    {
+        if (EnemyUI.activeSelf == true)
+        {
+            EnemyUI.SetActive(false);
+        }
+        Destroy(this.gameObject);
+    }
     public void UpdateEnemyHealth()
     {
-        if (isTargeted)
+        if (isTargeted && inPlayerVision)
         {
             float healthPercentage;
 
@@ -165,7 +174,7 @@ public class EnemyController : MonoBehaviour
 
             EnemyHealthBar.value = healthPercentage;
 
-            if (EnemyName.text != $"{thisEnemyType}")
+            if (EnemyName.text != $"{thisEnemyType}" | EnemyName.text == null)
             {
                 EnemyName.text = $"{thisEnemyType}";
             }
@@ -178,6 +187,8 @@ public class EnemyController : MonoBehaviour
             Debug.Log("Showing Enemy UI");
 
             EnemyUI.gameObject.SetActive(true);
+
+            UpdateEnemyHealth();
         }
     }
     public void HideEnemyUI()

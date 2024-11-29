@@ -156,6 +156,7 @@ public class PlayerController : MonoBehaviour
 
         Events.current.HideEnemyUI();
     }
+
     public void TakeDamage(float damageAmount)
     {
         playerHealth -= damageAmount;
