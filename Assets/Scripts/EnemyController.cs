@@ -28,8 +28,9 @@ public class EnemyController : MonoBehaviour
 
     public GameObject Player;
 
-    [SerializeField] public bool inPlayerVision;
-    [SerializeField] private bool inPlayerMeleeRange;
+    [SerializeField] public bool inPlayerVision = false;
+    [SerializeField] public bool isTargeted = false;
+    [SerializeField] private bool inPlayerMeleeRange = false;
 
     public enum EnemyState
     {
@@ -45,7 +46,6 @@ public class EnemyController : MonoBehaviour
         Events.current.onShowEnemyUI += ShowEnemyUI;
         Events.current.onHideEnemyUI += HideEnemyUI;
 
-        EnemyUI.SetActive(false);
 
         for (int i = 0; i < EnemyType.Count; i++)
         {
@@ -144,6 +144,7 @@ public class EnemyController : MonoBehaviour
         if (inPlayerMeleeRange)
         {
             thisEnemyHealth -= 50;
+            UpdateEnemyHealth();
         }
     }
     private void OnPlayerHeavyAttack()
@@ -151,33 +152,41 @@ public class EnemyController : MonoBehaviour
         if (inPlayerMeleeRange)
         {
             thisEnemyHealth -= 100;
+            UpdateEnemyHealth();
         }
     }
     public void UpdateEnemyHealth()
     {
-        float healthPercentage;
-
-        healthPercentage = (thisEnemyHealth / (EnemyHealth[listIndex])) * 100f;
-
-        EnemyHealthBar.value = healthPercentage;
-
-        if (EnemyName.text != $"{thisEnemyType}")
+        if (isTargeted)
         {
-            EnemyName.text = $"{thisEnemyType}";
+            float healthPercentage;
+
+            healthPercentage = (thisEnemyHealth / (EnemyHealth[listIndex])) * 100f;
+
+            EnemyHealthBar.value = healthPercentage;
+
+            if (EnemyName.text != $"{thisEnemyType}")
+            {
+                EnemyName.text = $"{thisEnemyType}";
+            }
         }
     }
     public void ShowEnemyUI()
     {
         if (EnemyUI.gameObject.activeSelf == false)
         {
-            EnemyUI.SetActive(true);
+            Debug.Log("Showing Enemy UI");
+
+            EnemyUI.gameObject.SetActive(true);
         }
     }
     public void HideEnemyUI()
     {
         if (EnemyUI.gameObject.activeSelf == true)
         {
-            EnemyUI.SetActive(false);
-        }
+            Debug.Log("Hiding Enemy UI");
+
+            EnemyUI.gameObject.SetActive(false);
+        }  
     }
 }

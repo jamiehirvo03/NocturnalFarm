@@ -32,8 +32,9 @@ public class PlayerController : MonoBehaviour
     private float staminaRegenTimer = 0;
     public float staminaTimeToRegen = 3;
 
+    public LayerMask enemyLayer;
     public float playerVisionDistance = 10;
-    private GameObject lastSeenEnemy;
+    private GameObject currentTarget;
 
     // Start is called before the first frame update
     void Start()
@@ -118,41 +119,43 @@ public class PlayerController : MonoBehaviour
         Quaternion rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
         playerLocation.rotation = rotation;
 
-        RaycastHit2D hit = Physics2D.Raycast(this.transform.position, direction, playerVisionDistance);
-        Debug.DrawRay(this.transform.position, direction, Color.green);
-
+        Debug.DrawRay(transform.position, direction, Color.green);
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, direction);
+        
         if (hit)
         {
-            if (hit.collider.gameObject.tag == "EnemyScout" | hit.collider.gameObject.tag == "EnemyRanged" | hit.collider.gameObject.tag == "EnemyGrunt" | hit.collider.gameObject.tag == "EnemyTank")
+            if (currentTarget == null)
             {
-                Events.current.ShowEnemyUI();
-
-                Debug.Log("Player is looking at enemy");
-
-                if (hit.collider.GetComponent<EnemyController>() != null)
-                {
-                    if (hit.collider.GetComponent<EnemyController>().inPlayerVision == true)
-                    {
-                        hit.collider.GetComponent<EnemyController>().UpdateEnemyHealth();
-
-                        if (lastSeenEnemy != hit.collider.gameObject)
-                        {
-                            lastSeenEnemy = hit.collider.gameObject;
-                        }
-                    }
-                }
+                currentTarget = hit.transform.gameObject;
+                OnRaycastEnter(currentTarget);
             }
-            else
+            else if (currentTarget != hit.transform.gameObject)
             {
-                Events.current.HideEnemyUI();
-            } 
-        }
-        else
-        {
-            Events.current.HideEnemyUI();
+                OnRaycastExit(currentTarget);
+                currentTarget = hit.transform.gameObject;
+                OnRaycastEnter(currentTarget);
+            }
         }
     }
 
+    private void OnRaycastEnter(GameObject target)
+    {
+        if (target.tag == "EnemyScout" | target.tag == "EnemyRanged" | target.tag == "EnemyGrunt" | target.tag == "EnemyTank")
+        {
+            if (target.GetComponent<EnemyController>().inPlayerVision == true)
+            {
+                target.GetComponent<EnemyController>().isTargeted = true;
+
+                Events.current.ShowEnemyUI();
+            }
+        } 
+    }
+    private void OnRaycastExit(GameObject target)
+    {
+        target.GetComponent<EnemyController>().isTargeted = false;
+
+        Events.current.HideEnemyUI();
+    }
     public void TakeDamage(float damageAmount)
     {
         playerHealth -= damageAmount;

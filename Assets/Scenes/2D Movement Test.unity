@@ -1838,9 +1838,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1790631545}
   - component: {fileID: 1790631544}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Ground
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2036,6 +2036,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyTank
       objectReference: {fileID: 0}
+    - target: {fileID: 6999350559492526046, guid: abd9f10a500862b4799a4c4843c9604c, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7732055469739000820, guid: abd9f10a500862b4799a4c4843c9604c, type: 3}
       propertyPath: m_LocalPosition.x
       value: -6.77
@@ -2094,9 +2098,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 1307343491254434076, guid: 7239cad043a0597489eaae9ce1b69358, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 1407370271178930880, guid: 7239cad043a0597489eaae9ce1b69358, type: 3}
       propertyPath: m_Name
       value: MeleeDetection
+      objectReference: {fileID: 0}
+    - target: {fileID: 1407370271178930880, guid: 7239cad043a0597489eaae9ce1b69358, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1407370271178930880, guid: 7239cad043a0597489eaae9ce1b69358, type: 3}
       propertyPath: m_TagString
@@ -2194,6 +2206,10 @@ PrefabInstance:
       propertyPath: staminaBar
       value: 
       objectReference: {fileID: 1069816893}
+    - target: {fileID: 5316020769692049344, guid: 7239cad043a0597489eaae9ce1b69358, type: 3}
+      propertyPath: enemyLayer.m_Bits
+      value: 1024
+      objectReference: {fileID: 0}
     - target: {fileID: 5915338929072392494, guid: 7239cad043a0597489eaae9ce1b69358, type: 3}
       propertyPath: m_Type
       value: 0
@@ -2223,8 +2239,20 @@ PrefabInstance:
       value: 4294967295
       objectReference: {fileID: 0}
     - target: {fileID: 7532633163308777963, guid: 7239cad043a0597489eaae9ce1b69358, type: 3}
+      propertyPath: m_Layer
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7532633163308777963, guid: 7239cad043a0597489eaae9ce1b69358, type: 3}
       propertyPath: m_TagString
       value: PlayerVision
+      objectReference: {fileID: 0}
+    - target: {fileID: 7773043646112071410, guid: 7239cad043a0597489eaae9ce1b69358, type: 3}
+      propertyPath: m_IncludeLayers.m_Bits
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 7847594092848203838, guid: 7239cad043a0597489eaae9ce1b69358, type: 3}
+      propertyPath: m_Layer
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2243,6 +2271,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 452310483}
+    - target: {fileID: 3065664091405719306, guid: e894246df420d8146af53346e14e6744, type: 3}
+      propertyPath: m_IncludeLayers.m_Bits
+      value: 4294967295
+      objectReference: {fileID: 0}
     - target: {fileID: 3209850279365554807, guid: e894246df420d8146af53346e14e6744, type: 3}
       propertyPath: Player
       value: 
@@ -2327,6 +2359,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyGrunt
       objectReference: {fileID: 0}
+    - target: {fileID: 7860098892258192169, guid: e894246df420d8146af53346e14e6744, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8644241744560309906, guid: e894246df420d8146af53346e14e6744, type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
@@ -2407,6 +2443,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyScout
       objectReference: {fileID: 0}
+    - target: {fileID: 6762047145021306807, guid: f5d73f0d77cd2f84e890fed829b72c7d, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 9136329638347214704, guid: f5d73f0d77cd2f84e890fed829b72c7d, type: 3}
       propertyPath: Player
       value: 
@@ -2465,6 +2505,10 @@ PrefabInstance:
     - target: {fileID: 6303567975320022479, guid: 22f3f58e7ded80346b08203fc6e356d8, type: 3}
       propertyPath: m_Name
       value: EnemyRanged
+      objectReference: {fileID: 0}
+    - target: {fileID: 6303567975320022479, guid: 22f3f58e7ded80346b08203fc6e356d8, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7092821647118605361, guid: 22f3f58e7ded80346b08203fc6e356d8, type: 3}
       propertyPath: m_LocalPosition.x
