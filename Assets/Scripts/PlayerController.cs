@@ -27,10 +27,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float maxStamina = 100;
     public Slider staminaBar;
 
-    public  float staminaDecreasePerFrame = 1;
-    public float staminaIncreasePerFrame = 5;
+    public  float staminaDecreasePerFrame = 5;
+    public float staminaIncreasePerFrame = 20;
     private float staminaRegenTimer = 0;
     public float staminaTimeToRegen = 3;
+
+    public float playerVisionDistance = 10;
+    private GameObject lastSeenEnemy;
 
     // Start is called before the first frame update
     void Start()
@@ -74,11 +77,6 @@ public class PlayerController : MonoBehaviour
         {
             Events.current.PlayerLightAttack();
         }
-
-        Vector2 direction = Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerLocation.position;
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        Quaternion rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
-        playerLocation.rotation = rotation;
     }
     private void FixedUpdate()
     {
@@ -114,8 +112,52 @@ public class PlayerController : MonoBehaviour
             }
         }
         rb.velocity = movementDirection * movementSpeed;
+
+        Vector2 direction = Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerLocation.position;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+        Quaternion rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
+        playerLocation.rotation = rotation;
+
+        RaycastHit2D hit = Physics2D.Raycast(this.transform.position, direction, playerVisionDistance);
+        Debug.DrawRay(this.transform.position, direction, Color.green);
+
+        if (hit)
+        {
+            if (hit.collider.gameObject.tag == "EnemyScout" | hit.collider.gameObject.tag == "EnemyRanged" | hit.collider.gameObject.tag == "EnemyGrunt" | hit.collider.gameObject.tag == "EnemyTank")
+            {
+                Events.current.ShowEnemyUI();
+
+                Debug.Log("Player is looking at enemy");
+
+                if (hit.collider.GetComponent<EnemyController>() != null)
+                {
+                    if (hit.collider.GetComponent<EnemyController>().inPlayerVision == true)
+                    {
+                        hit.collider.GetComponent<EnemyController>().UpdateEnemyHealth();
+
+                        if (lastSeenEnemy != hit.collider.gameObject)
+                        {
+                            lastSeenEnemy = hit.collider.gameObject;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                Events.current.HideEnemyUI();
+            } 
+        }
+        else
+        {
+            Events.current.HideEnemyUI();
+        }
     }
 
+    public void TakeDamage(float damageAmount)
+    {
+        playerHealth -= damageAmount;
+        UpdateHealthBar();
+    }
     private void UpdateHealthBar()
     {
         healthBar.value = playerHealth;

@@ -26,6 +26,9 @@ public class Events : MonoBehaviour
     public event Action onPlayerHeavyAttack;
     public event Action onPlayerRangedAttack;
 
+    public event Action onShowEnemyUI;
+    public event Action onHideEnemyUI;
+
     public void PlayerIdle()
     {
         if (onPlayerIdle != null)
@@ -80,6 +83,20 @@ public class Events : MonoBehaviour
         if (onPlayerRangedAttack != null)
         {
             onPlayerRangedAttack();
+        }
+    }
+    public void ShowEnemyUI()
+    {
+        if (onShowEnemyUI != null)
+        {
+            onShowEnemyUI();
+        }
+    }
+    public void HideEnemyUI()
+    {
+        if (onHideEnemyUI != null)
+        {
+            onHideEnemyUI();
         }
     }
 }

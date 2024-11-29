@@ -166,9 +166,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementSpeed: 0
   isSprinting: 0
+  rb: {fileID: 7773043646112071410}
   walkSpeed: 4
   sprintSpeed: 8
-  rb: {fileID: 7773043646112071410}
+  playerHealth: 0
+  maxHealth: 150
+  healthBar: {fileID: 0}
+  playerStamina: 0
+  maxStamina: 100
+  staminaBar: {fileID: 0}
+  staminaDecreasePerFrame: 1
+  staminaIncreasePerFrame: 5
+  staminaTimeToRegen: 3
 --- !u!1 &1407370271178930880
 GameObject:
   m_ObjectHideFlags: 0
@@ -179,7 +188,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6384853845495959620}
   - component: {fileID: 2019566504197435183}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: MeleeDetection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -216,7 +225,7 @@ PolygonCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -246,8 +255,8 @@ PolygonCollider2D:
   m_Points:
     m_Paths:
     - - {x: 0, y: -0.6871581}
-      - {x: -2.0877852, y: 1.9409828}
-      - {x: 2.0877852, y: 1.940983}
+      - {x: -1.5266931, y: 1.1847286}
+      - {x: 1.5998791, y: 1.1847286}
   m_UseDelaunayMesh: 0
 --- !u!1 &7532633163308777963
 GameObject:
