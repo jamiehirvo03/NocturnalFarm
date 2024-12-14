@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Diagnostics.Contracts;
 
 public class EnemyController : MonoBehaviour
 {
@@ -24,7 +25,6 @@ public class EnemyController : MonoBehaviour
 
     public GameObject EnemyUI;
     public Slider EnemyHealthBar;
-    public TextMeshProUGUI EnemyName;
 
     public GameObject Player;
 
@@ -40,13 +40,14 @@ public class EnemyController : MonoBehaviour
     }
     public EnemyState currentState;
 
+    public Camera Camera;
+    public Transform healthBarTransform;
+    public Vector3 healthBarOffset;
+
     // Start is called before the first frame update
     void Start()
     {
-        Events.current.onShowEnemyUI += ShowEnemyUI;
-        Events.current.onHideEnemyUI += HideEnemyUI;
-
-        EnemyUI.SetActive(false);
+        HideEnemyUI();
 
         for (int i = 0; i < EnemyType.Count; i++)
         {
@@ -70,6 +71,18 @@ public class EnemyController : MonoBehaviour
         {
             EnemyDeath();
         }
+
+        if (inPlayerVision)
+        {
+            ShowEnemyUI();
+        }
+        if (!inPlayerVision)
+        {
+            HideEnemyUI();
+        }
+
+        healthBarTransform.rotation = Camera.transform.rotation;
+        healthBarTransform.position = this.gameObject.transform.position + healthBarOffset;
     }
 
     private void FixedUpdate()
@@ -173,11 +186,6 @@ public class EnemyController : MonoBehaviour
             healthPercentage = (thisEnemyHealth / (EnemyHealth[listIndex])) * 100f;
 
             EnemyHealthBar.value = healthPercentage;
-
-            if (EnemyName.text != $"{thisEnemyType}" | EnemyName.text == null)
-            {
-                EnemyName.text = $"{thisEnemyType}";
-            }
         }
     }
     public void ShowEnemyUI()

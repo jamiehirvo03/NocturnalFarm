@@ -8,9 +8,8 @@ public class PlayerController : MonoBehaviour
 {
     [SerializeField] private float movementSpeed;
     [SerializeField] private bool isSprinting;
-    
-    private float horizontal;
-    private float vertical;
+
+    private Vector2 movement;
     private float moveLimiter = 0.7f;
     public Rigidbody2D rb;
     private Vector2 movementDirection;
@@ -36,6 +35,10 @@ public class PlayerController : MonoBehaviour
     public float playerVisionDistance = 10;
     private GameObject currentTarget;
 
+    public Animator TorsoAnimator;
+    public Animator LegsAnimator;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -57,11 +60,9 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        horizontal = Input.GetAxisRaw("Horizontal");
-        vertical = Input.GetAxisRaw("Vertical");
+        movement.x = Input.GetAxisRaw("Horizontal");
+        movement.y = Input.GetAxisRaw("Vertical");
         
-        movementDirection = new Vector2(horizontal, vertical);
-
         if (Input.GetKeyDown(KeyCode.LeftShift) && !isSprinting)
         {
             movementSpeed = sprintSpeed;
@@ -76,17 +77,25 @@ public class PlayerController : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            Events.current.PlayerLightAttack();
+            MeleeAttack();
         }
+
+        TorsoAnimator.SetFloat("Horizontal", movement.x);
+        TorsoAnimator.SetFloat("Vertical", movement.y);
+        TorsoAnimator.SetFloat("Speed", movement.sqrMagnitude);
+
+        LegsAnimator.SetFloat("Horizontal", movement.x);
+        LegsAnimator.SetFloat("Vertical", movement.y);
+        LegsAnimator.SetFloat("Speed", movement.sqrMagnitude);
     }
     private void FixedUpdate()
     {
-        if (horizontal != 0 && vertical != 0)
+        if (movement.x != 0 && movement.y != 0)
         {
-            movementDirection *= moveLimiter;
+            movement *= moveLimiter;
         }
 
-        if (horizontal != 0 | vertical != 0)
+        if (movement.x != 0 | movement.y != 0)
         {
             if (isSprinting)
             {
@@ -97,7 +106,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if (horizontal == 0 && vertical == 0)
+        if (movement.x == 0 && movement.y == 0)
         {
             if (playerStamina < maxStamina)
             {
@@ -112,7 +121,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
-        rb.velocity = movementDirection * movementSpeed;
+        rb.velocity = movement * movementSpeed;
 
         Vector2 direction = Camera.main.ScreenToWorldPoint(Input.mousePosition) - playerLocation.position;
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
@@ -155,6 +164,12 @@ public class PlayerController : MonoBehaviour
         target.GetComponent<EnemyController>().isTargeted = false;
 
         Events.current.HideEnemyUI();
+    }
+    private void MeleeAttack()
+    {
+        TorsoAnimator.SetTrigger("Attack");
+
+        Events.current.PlayerLightAttack();
     }
 
     public void TakeDamage(float damageAmount)
